@@ -142,6 +142,17 @@ def test_array_array():
     assert_equal(np.array([(1.0,) * 10] * 10, dtype=np.float64),
                  np.ones((10, 10), dtype=np.float64))
 
+# Numpy should generate a warning when strings are input as the input
+# data together with "subarray" dtypes:
+def test_for_warning_1():
+    with assert_warns(Warning):
+        array_with_string_subarrays = np.array(["some_string"], dtype=("U1", 4))
+
+def test_for_warning_2():
+    with assert_warns(Warning):
+        array_with_string_subarrays = np.array(["some_string", "another_string"], dtype=("U2", 4))
+
+
 @pytest.mark.parametrize("array", [True, False])
 def test_array_impossible_casts(array):
     # All builtin types can forst cast as least theoretically
