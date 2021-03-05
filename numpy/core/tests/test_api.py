@@ -635,66 +635,7 @@ def test_sub_arrays_u2strings(input, dtype, expected_output):
     tester = np.array(input, dtype=dtype)
     assert_array_equal(tester, expected_output)
 
-"""
-def test_sub_arrays_u2_strings():
-    size_two = np.dtype(("U2", 2))
-    size_three = np.dtype(("U2", 3))
-    size_four = np.dtype(("U2", 4))
 
-    a = (np.array(["ab", "cd"], dtype=size_two))
-    expected_output_a = np.array((["ab", "ab"], ["cd", "cd"]))
-
-    assert_array_equal(a, expected_output_a)
-
-    b = (np.array(["abc", "def"], dtype=size_three))
-    c = (np.array(["abc", "def", "ghi"], dtype=size_three))
-
-    expected_output_b = np.array((["ab", "ab", "ab"], ["de", "de", "de"]))
-    expected_output_c = np.array((["ab", "ab", "ab"], ["de", "de", "de"], ["gh", "gh", "gh"]))
-
-    assert_array_equal(b, expected_output_b)
-    assert_array_equal(c, expected_output_c)
-
-    g = (np.array(["hello", "world"], dtype=size_four))
-    h = (np.array(["hello", "python", "world"], dtype=size_four))
-
-    expected_output_g = np.array((["he", "he", "he", "he"], ["wo", "wo", "wo", "wo"]))
-    expected_output_h = np.array((["he", "he", "he", "he"], ["py", "py", "py", "py"], ["wo", "wo", "wo", "wo"]))
-
-    assert_array_equal(g, expected_output_g)
-    assert_array_equal(h, expected_output_h)
-
-
-def test_sub_arrays_u3_strings():
-    size_two = np.dtype(("U3", 2))
-    size_three = np.dtype(("U3", 3))
-    size_four = np.dtype(("U3", 4))
-
-    a = (np.array(["ab", "cd"], dtype=size_two))
-    expected_output_a = np.array((["ab", "ab"], ["cd", "cd"]))
-
-    assert_array_equal(a, expected_output_a)
-
-    b = (np.array(["abc", "def"], dtype=size_three))
-    c = (np.array(["abc", "def", "ghi"], dtype=size_three))
-
-    expected_output_b = np.array((["abc", "abc", "abc"], ["def", "def", "def"]))
-    expected_output_c = np.array((["abc", "abc", "abc"], ["def", "def", "def"], ["ghi", "ghi", "ghi"]))
-
-    assert_array_equal(b, expected_output_b)
-    assert_array_equal(c, expected_output_c)
-
-    g = (np.array(["hello", "world"], dtype=size_four))
-    h = (np.array(["hello", "python", "world"], dtype=size_four))
-
-    expected_output_g = np.array((["hel", "hel", "hel", "hel"], ["wor", "wor", "wor", "wor"]))
-    expected_output_h = np.array(
-        (["hel", "hel", "hel", "hel"], ["pyt", "pyt", "pyt", "pyt"], ["wor", "wor", "wor", "wor"]))
-
-    assert_array_equal(g, expected_output_g)
-    assert_array_equal(h, expected_output_h)
-
-"""
 @pytest.mark.parametrize(["input", "dtype", "expected_output"],
                          [ #if U number is greater than string length, then it will cap at string length
                              (["ab", "cd"], np.dtype(("U3", 2)), np.array((["ab", "ab"], ["cd", "cd"]))),
