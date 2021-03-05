@@ -4,9 +4,9 @@ import numpy as np
 from numpy.core._rational_tests import rational
 import pytest
 from numpy.testing import (
-     assert_, assert_equal, assert_array_equal, assert_raises, assert_warns,
-     HAS_REFCOUNT
-    )
+    assert_, assert_equal, assert_array_equal, assert_raises, assert_warns,
+    HAS_REFCOUNT
+)
 
 # Switch between new behaviour when NPY_RELAXED_STRIDES_CHECKING is set.
 NPY_RELAXED_STRIDES_CHECKING = np.ones((10, 1), order='C').flags.f_contiguous
@@ -142,6 +142,7 @@ def test_array_array():
     assert_equal(np.array([(1.0,) * 10] * 10, dtype=np.float64),
                  np.ones((10, 10), dtype=np.float64))
 
+
 @pytest.mark.parametrize("array", [True, False])
 def test_array_impossible_casts(array):
     # All builtin types can forst cast as least theoretically
@@ -171,6 +172,7 @@ def test_fastCopyAndTranspose():
     b = np.fastCopyAndTranspose(a)
     assert_equal(b, a.T)
     assert_(b.flags.owndata)
+
 
 def test_array_astype():
     a = np.arange(6, dtype='f4').reshape(2, 3)
@@ -237,21 +239,21 @@ def test_array_astype():
 
     # Make sure converting from string object to fixed length string
     # does not truncate.
-    a = np.array([b'a'*100], dtype='O')
+    a = np.array([b'a' * 100], dtype='O')
     b = a.astype('S')
     assert_equal(a, b)
     assert_equal(b.dtype, np.dtype('S100'))
-    a = np.array([u'a'*100], dtype='O')
+    a = np.array([u'a' * 100], dtype='O')
     b = a.astype('U')
     assert_equal(a, b)
     assert_equal(b.dtype, np.dtype('U100'))
 
     # Same test as above but for strings shorter than 64 characters
-    a = np.array([b'a'*10], dtype='O')
+    a = np.array([b'a' * 10], dtype='O')
     b = a.astype('S')
     assert_equal(a, b)
     assert_equal(b.dtype, np.dtype('S10'))
-    a = np.array([u'a'*10], dtype='O')
+    a = np.array([u'a' * 10], dtype='O')
     b = a.astype('U')
     assert_equal(a, b)
     assert_equal(b.dtype, np.dtype('U10'))
@@ -288,24 +290,27 @@ def test_array_astype_to_void(dt):
     arr = np.array([], dtype=dt)
     assert arr.astype("V").dtype.itemsize == dt.itemsize
 
+
 def test_object_array_astype_to_void():
     # This is different to `test_array_astype_to_void` as object arrays
     # are inspected.  The default void is "V8" (8 is the length of double)
     arr = np.array([], dtype="O").astype("V")
     assert arr.dtype == "V8"
 
+
 @pytest.mark.parametrize("t",
-    np.sctypes['uint'] + np.sctypes['int'] + np.sctypes['float']
-)
+                         np.sctypes['uint'] + np.sctypes['int'] + np.sctypes['float']
+                         )
 def test_array_astype_warning(t):
     # test ComplexWarning when casting from complex to float or int
     a = np.array(10, dtype=np.complex_)
     assert_warns(np.ComplexWarning, a.astype, t)
 
+
 @pytest.mark.parametrize(["dtype", "out_dtype"],
-        [(np.bytes_, np.bool_),
-         (np.unicode_, np.bool_),
-         (np.dtype("S10,S9"), np.dtype("?,?"))])
+                         [(np.bytes_, np.bool_),
+                          (np.unicode_, np.bool_),
+                          (np.dtype("S10,S9"), np.dtype("?,?"))])
 def test_string_to_boolean_cast(dtype, out_dtype):
     """
     Currently, for `astype` strings are cast to booleans effectively by
@@ -316,10 +321,11 @@ def test_string_to_boolean_cast(dtype, out_dtype):
     expected = np.array([True, True, False, False], dtype=out_dtype)
     assert_array_equal(arr.astype(out_dtype), expected)
 
+
 @pytest.mark.parametrize(["dtype", "out_dtype"],
-        [(np.bytes_, np.bool_),
-         (np.unicode_, np.bool_),
-         (np.dtype("S10,S9"), np.dtype("?,?"))])
+                         [(np.bytes_, np.bool_),
+                          (np.unicode_, np.bool_),
+                          (np.dtype("S10,S9"), np.dtype("?,?"))])
 def test_string_to_boolean_cast_errors(dtype, out_dtype):
     """
     These currently error out, since cast to integers fails, but should not
@@ -330,17 +336,19 @@ def test_string_to_boolean_cast_errors(dtype, out_dtype):
         with assert_raises(ValueError):
             arr.astype(out_dtype)
 
+
 @pytest.mark.parametrize("str_type", [str, bytes, np.str_, np.unicode_])
 @pytest.mark.parametrize("scalar_type",
-        [np.complex64, np.complex128, np.clongdouble])
+                         [np.complex64, np.complex128, np.clongdouble])
 def test_string_to_complex_cast(str_type, scalar_type):
     value = scalar_type(b"1+3j")
-    assert scalar_type(value) == 1+3j
-    assert np.array([value], dtype=object).astype(scalar_type)[()] == 1+3j
-    assert np.array(value).astype(scalar_type)[()] == 1+3j
+    assert scalar_type(value) == 1 + 3j
+    assert np.array([value], dtype=object).astype(scalar_type)[()] == 1 + 3j
+    assert np.array(value).astype(scalar_type)[()] == 1 + 3j
     arr = np.zeros(1, dtype=scalar_type)
     arr[0] = value
-    assert arr[0] == 1+3j
+    assert arr[0] == 1 + 3j
+
 
 @pytest.mark.parametrize("dtype", np.typecodes["AllFloat"])
 def test_none_to_nan_cast(dtype):
@@ -352,6 +360,7 @@ def test_none_to_nan_cast(dtype):
     assert np.isnan(np.array(None, dtype=dtype))[()]
     assert np.isnan(np.array([None], dtype=dtype))[0]
     assert np.isnan(np.array(None).astype(dtype))[()]
+
 
 def test_copyto_fromscalar():
     a = np.arange(6, dtype='f4').reshape(2, 3)
@@ -369,6 +378,7 @@ def test_copyto_fromscalar():
     mask = np.array([[0, 1], [1, 1], [1, 0]], dtype='?')
     np.copyto(a.T, 4.5, where=mask)
     assert_equal(a, [[2.5, 4.5, 4.5], [4.5, 4.5, 3.5]])
+
 
 def test_copyto():
     a = np.arange(6, dtype='i4').reshape(2, 3)
@@ -406,12 +416,13 @@ def test_copyto():
     # 'dst' must be an array
     assert_raises(TypeError, np.copyto, [1, 2, 3], [2, 3, 4])
 
+
 def test_copyto_permut():
     # test explicit overflow case
     pad = 500
     l = [True] * pad + [True, True, True, True]
-    r = np.zeros(len(l)-pad)
-    d = np.ones(len(l)-pad)
+    r = np.zeros(len(l) - pad)
+    d = np.ones(len(l) - pad)
     mask = np.array(l)[pad:]
     np.copyto(r, d, where=mask[::-1])
 
@@ -419,7 +430,7 @@ def test_copyto_permut():
     # current 4 byte unrolled code
     power = 9
     d = np.ones(power)
-    for i in range(2**power):
+    for i in range(2 ** power):
         r = np.zeros(power)
         l = [(i & x) != 0 for x in range(power)]
         mask = np.array(l)
@@ -458,6 +469,7 @@ def test_copyto_permut():
     d = np.zeros(power)
     np.copyto(r, d, where=False)
     assert_equal(r.sum(), r.size)
+
 
 def test_copy_order():
     a = np.arange(24).reshape(2, 1, 3, 4)
@@ -527,8 +539,9 @@ def test_copy_order():
     res = np.copy(c, order='K')
     check_copy_result(res, c, ccontig=False, fcontig=False, strides=True)
 
+
 def test_contiguous_flags():
-    a = np.ones((4, 4, 1))[::2,:,:]
+    a = np.ones((4, 4, 1))[::2, :, :]
     if NPY_RELAXED_STRIDES_CHECKING:
         a.strides = a.strides[:2] + (-123,)
     b = np.ones((2, 2, 1, 2, 2)).swapaxes(3, 4)
@@ -559,7 +572,7 @@ def test_contiguous_flags():
         check_contig(a[0], True, True)
         check_contig(a[None, ::4, ..., None], True, True)
         check_contig(b[0, 0, ...], False, True)
-        check_contig(b[:,:, 0:0,:,:], True, True)
+        check_contig(b[:, :, 0:0, :, :], True, True)
     else:
         # Check slicing update of flags:
         check_contig(a[0], True, False)
@@ -571,6 +584,7 @@ def test_contiguous_flags():
     check_contig(a.ravel(), True, True)
     check_contig(np.ones((1, 3, 1)).squeeze(), True, True)
 
+
 def test_broadcast_arrays():
     # Test user defined dtypes
     a = np.array([(1, 2, 3)], dtype='u4,u4,u4')
@@ -579,9 +593,118 @@ def test_broadcast_arrays():
     assert_equal(result[0], np.array([(1, 2, 3), (1, 2, 3), (1, 2, 3)], dtype='u4,u4,u4'))
     assert_equal(result[1], np.array([(1, 2, 3), (4, 5, 6), (7, 8, 9)], dtype='u4,u4,u4'))
 
+
 @pytest.mark.parametrize(["shape", "fill_value", "expected_output"],
-        [((2, 2), [5.0,  6.0], np.array([[5.0, 6.0], [5.0, 6.0]])),
-         ((3, 2), [1.0,  2.0], np.array([[1.0, 2.0], [1.0, 2.0], [1.0,  2.0]]))])
+                         [((2, 2), [5.0, 6.0], np.array([[5.0, 6.0], [5.0, 6.0]])),
+                          ((3, 2), [1.0, 2.0], np.array([[1.0, 2.0], [1.0, 2.0], [1.0, 2.0]]))])
 def test_full_from_list(shape, fill_value, expected_output):
     output = np.full(shape, fill_value)
     assert_equal(output, expected_output)
+
+
+# the following three tests should fail for numpy version 1.19.5 but pass for numpy version 1.20.1
+
+@pytest.mark.parametrize(["input", "dtype", "expected_output"],
+                         [
+                             (["ab", "cd"], np.dtype(("U1", 2)), np.array((["a", "a"], ["c", "c"]))),
+                             (["ab", "cd"], np.dtype(("U1", 3)), np.array((["a", "a", "a"], ["c", "c", "c"]))),
+                             (["abc", "def", "ghi"], np.dtype(("U1", 3)),
+                              np.array((["a", "a", "a"], ["d", "d", "d"], ["g", "g", "g"]))),
+                             (["hello", "world", "python"], np.dtype(("U1", 4)),
+                              np.array((["h", "h", "h", "h"], ["w", "w", "w", "w"], ["p", "p", "p", "p"]))),
+                             (["hello", "world"], np.dtype(("U1", 4)),
+                              np.array((["h", "h", "h", "h"], ["w", "w", "w", "w"]))),
+
+                         ])
+def test_sub_arrays_u1_strings(input, dtype, expected_output):
+    tester = np.array(input, dtype=dtype)
+    assert_array_equal(tester, expected_output)
+
+
+@pytest.mark.parametrize(["input", "dtype", "expected_output"],
+                         [
+                             (["ab", "cd"], np.dtype(("U2", 2)), np.array((["ab", "ab"], ["cd", "cd"]))),
+                             (["ab", "cd"], np.dtype(("U2", 3)), np.array((["ab", "ab", "ab"], ["cd", "cd", "cd"]))),
+                             (["abc", "def", "ghi"], np.dtype(("U2", 3)),np.array((["ab", "ab", "ab"], ["de", "de", "de"], ["gh", "gh", "gh"]))),
+
+                             (["hello", "world"], np.dtype(("U2", 4)),np.array((["he", "he", "he", "he"], ["wo", "wo", "wo", "wo"]))),
+                             (["hello", "world", "python"], np.dtype(("U2", 4)),np.array((["he", "he", "he", "he"], ["wo", "wo", "wo", "wo"], ["py", "py", "py", "py"]))),
+
+                         ])
+def test_sub_arrays_u2strings(input, dtype, expected_output):
+    tester = np.array(input, dtype=dtype)
+    assert_array_equal(tester, expected_output)
+
+"""
+def test_sub_arrays_u2_strings():
+    size_two = np.dtype(("U2", 2))
+    size_three = np.dtype(("U2", 3))
+    size_four = np.dtype(("U2", 4))
+
+    a = (np.array(["ab", "cd"], dtype=size_two))
+    expected_output_a = np.array((["ab", "ab"], ["cd", "cd"]))
+
+    assert_array_equal(a, expected_output_a)
+
+    b = (np.array(["abc", "def"], dtype=size_three))
+    c = (np.array(["abc", "def", "ghi"], dtype=size_three))
+
+    expected_output_b = np.array((["ab", "ab", "ab"], ["de", "de", "de"]))
+    expected_output_c = np.array((["ab", "ab", "ab"], ["de", "de", "de"], ["gh", "gh", "gh"]))
+
+    assert_array_equal(b, expected_output_b)
+    assert_array_equal(c, expected_output_c)
+
+    g = (np.array(["hello", "world"], dtype=size_four))
+    h = (np.array(["hello", "python", "world"], dtype=size_four))
+
+    expected_output_g = np.array((["he", "he", "he", "he"], ["wo", "wo", "wo", "wo"]))
+    expected_output_h = np.array((["he", "he", "he", "he"], ["py", "py", "py", "py"], ["wo", "wo", "wo", "wo"]))
+
+    assert_array_equal(g, expected_output_g)
+    assert_array_equal(h, expected_output_h)
+
+
+def test_sub_arrays_u3_strings():
+    size_two = np.dtype(("U3", 2))
+    size_three = np.dtype(("U3", 3))
+    size_four = np.dtype(("U3", 4))
+
+    a = (np.array(["ab", "cd"], dtype=size_two))
+    expected_output_a = np.array((["ab", "ab"], ["cd", "cd"]))
+
+    assert_array_equal(a, expected_output_a)
+
+    b = (np.array(["abc", "def"], dtype=size_three))
+    c = (np.array(["abc", "def", "ghi"], dtype=size_three))
+
+    expected_output_b = np.array((["abc", "abc", "abc"], ["def", "def", "def"]))
+    expected_output_c = np.array((["abc", "abc", "abc"], ["def", "def", "def"], ["ghi", "ghi", "ghi"]))
+
+    assert_array_equal(b, expected_output_b)
+    assert_array_equal(c, expected_output_c)
+
+    g = (np.array(["hello", "world"], dtype=size_four))
+    h = (np.array(["hello", "python", "world"], dtype=size_four))
+
+    expected_output_g = np.array((["hel", "hel", "hel", "hel"], ["wor", "wor", "wor", "wor"]))
+    expected_output_h = np.array(
+        (["hel", "hel", "hel", "hel"], ["pyt", "pyt", "pyt", "pyt"], ["wor", "wor", "wor", "wor"]))
+
+    assert_array_equal(g, expected_output_g)
+    assert_array_equal(h, expected_output_h)
+
+"""
+@pytest.mark.parametrize(["input", "dtype", "expected_output"],
+                         [ #if U number is greater than string length, then it will cap at string length
+                             (["ab", "cd"], np.dtype(("U3", 2)), np.array((["ab", "ab"], ["cd", "cd"]))),
+                             (["ab", "cd"], np.dtype(("U3", 3)), np.array((["ab", "ab", "ab"], ["cd", "cd", "cd"]))),
+                             (["abc", "def", "ghi"], np.dtype(("U3", 3)),np.array((["abc", "abc", "abc"], ["def", "def", "def"], ["ghi", "ghi", "ghi"]))),
+
+                             (["hello", "world"], np.dtype(("U3", 4)),np.array((["hel", "hel", "hel", "hel"], ["wor", "wor", "wor", "wor"]))),
+                             (["hello", "world", "python"], np.dtype(("U3", 4)),np.array((["hel", "hel", "hel", "hel"], ["wor", "wor", "wor", "wor"], ["pyt", "pyt", "pyt", "pyt"]))),
+
+                         ])
+def test_sub_arrays_u3strings(input, dtype, expected_output):
+    tester = np.array(input, dtype=dtype)
+    assert_array_equal(tester, expected_output)
